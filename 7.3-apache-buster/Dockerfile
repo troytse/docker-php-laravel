@@ -17,4 +17,5 @@ RUN sed -i 's/deb.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
     && mkdir -p /var/www/html/public \
     && sed -i 's/\/var\/www\/html/\/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf \
     && a2enmod rewrite \
-    && php /usr/local/bin/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    && php /usr/local/bin/composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
