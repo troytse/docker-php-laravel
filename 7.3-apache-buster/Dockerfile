@@ -1,7 +1,8 @@
 FROM php:7.3-apache-buster
+COPY ./composer-setup.php /usr/local/bin/
 RUN sed -i 's/deb.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
     && sed -i 's/security.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
-    && apt-get update && apt-get install -y apt-utils && apt-get upgrade -y && apt-get autoremove -y \
+    && apt-get update && apt-get install -y apt-utils git && apt-get upgrade -y && apt-get autoremove -y \
     && apt-get install -y --no-install-recommends libzip-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install -j$(nproc) bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
@@ -15,4 +16,5 @@ RUN sed -i 's/deb.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
     && docker-php-ext-install opcache \
     && mkdir -p /var/www/html/public \
     && sed -i 's/\/var\/www\/html/\/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && php /usr/local/bin/composer-setup.php --install-dir=/usr/local/bin --filename=composer
