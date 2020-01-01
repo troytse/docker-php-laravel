@@ -20,4 +20,4 @@ RUN sed -i 's/deb.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
     && composer global require laravel/installer \
-	&& echo 'alias artisan="php artisan"' >> /root/.bashrc
+    && echo 'alias artisan="php artisan"' >> /root/.bashrc
