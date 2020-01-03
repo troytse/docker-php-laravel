@@ -22,4 +22,4 @@ RUN sed -i 's/deb.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
     && composer global require laravel/installer \
     && echo 'alias artisan="php artisan"' >> /root/.bashrc \
     && echo '* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1' > /root/cron.txt \
-    && sed "2 iif [ \`expr match \"\$SET_CRONTAB\" '[O|o][N|n]$'\` -ne 0 ]; then crontab /root/cron.txt; fi" -i /usr/local/bin/docker-php-entrypoint
+    && sed "2 iif [ \`expr match \"\$SET_CRONTAB\" '[O|o][N|n]$'\` -ne 0 ]; then crontab /root/cron.txt; /etc/init.d/cron start; fi" -i /usr/local/bin/docker-php-entrypoint
