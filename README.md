@@ -19,11 +19,11 @@ troytse/php-laravel:7.3-apache-buster
 ## Environment Variables
 
 ### SET_CRONTAB
-This variable can specify the switch to auto inject crontab.
+This variable specifies whether to enable automatic registration of scheduled tasks in crontab.
 
 ### For other environment variables, please refer to the base image
-* [7.4-apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=7.4-apache-buster)
-* [7.3-apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=7.3-apache-buster)
+* [php/apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=apache-buster)
+* [php/7.3-apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=7.3-apache-buster)
 
 ## Included Extensions
 * [PHP Modules]
