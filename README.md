@@ -3,7 +3,29 @@
 This image builds based-on the DockerHub's official PHP image.
 Add the required extensions for Laravel and some common extensions.
 
-### Extensions
+## Example
+```
+docker run
+--restart always \
+-d \
+-p 80:80 \
+-e SET_CRONTAB=On \
+-e APACHE_RUN_USER=#$(id -u) \
+-e APACHE_RUN_GROUP=#$(id -g) \
+-v /path/to/host:/var/www/html \
+troytse/php-laravel:7.3-apache-buster
+```
+
+## Environment Variables
+
+### SET_CRONTAB
+This variable can specify the switch to auto inject crontab.
+
+### For other environment variables, please refer to the base image
+* [7.4-apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=7.4-apache-buster)
+* [7.3-apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=7.3-apache-buster)
+
+## Included Extensions
 * [PHP Modules]
     * bcmath
     * Core
