@@ -10,7 +10,7 @@ RUN sed -i 's/deb.debian.org/mirrors.huaweicloud.com/g' /etc/apt/sources.list \
     && docker-php-ext-install -j$(nproc) gd \
     && pecl install mcrypt-1.0.2 \
     && docker-php-ext-enable mcrypt \
-    && pecl install redis-5.0.0 \
+    && pecl install redis-5.2.2 \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache \
@@ -29,3 +29,6 @@ if [ `expr match "$SET_CRONTAB" "[O|o][N|n]$"` -ne 0 ]; then\n\
 \t/etc/init.d/cron start\n\
 fi' > /root/entrypoint.sh \
     && sed "2 i/bin/sh /root/entrypoint.sh" -i /usr/local/bin/docker-php-entrypoint
+LABEL Author="Troy Tse <troy@holyhi.net>"
+LABEL Version="1.0"
+LABEL Description="The Laravel runtime environment on Apache with PHP 7.3."
