@@ -21,14 +21,8 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
     && php composer-setup.php --install-dir="/usr/local/bin" --filename="composer" \
     && php -r "unlink('composer-setup.php');" \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
-    && composer global require laravel/installer
-RUN echo "alias artisan='sudo -H -u \$APACHE_RUN_USER -g \$APACHE_RUN_GROUP php artisan'" >> /root/.bashrc \
-    && echo '#!/bin/sh\n\
-if [ `expr match "$SET_CRONTAB" "[O|o][N|n]$"` -ne 0 ]; then\n\
-\techo "* * * * * /usr/bin/sudo -H -u \\"$APACHE_RUN_USER\\" -g \\"$APACHE_RUN_GROUP\\" bash -c \\"/usr/local/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1\\"" > /root/crontab.txt\n\
-\tcrontab /root/crontab.txt\n\
-\t/etc/init.d/cron start\n\
-fi' > /root/entrypoint.sh \
+    && echo "alias artisan='sudo -H -u \$APACHE_RUN_USER -g \$APACHE_RUN_GROUP php artisan'" >> /root/.bashrc \
+    && echo '#!/bin/sh\nif [ `expr match "$SET_CRONTAB" "[O|o][N|n]$"` -ne 0 ]; then\n\techo "* * * * * /usr/bin/sudo -H -u \\"$APACHE_RUN_USER\\" -g \\"$APACHE_RUN_GROUP\\" bash -c \\"/usr/local/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1\\"" > /root/crontab.txt\n\tcrontab /root/crontab.txt\n\t/etc/init.d/cron start\nfi' > /root/entrypoint.sh \
     && sed "2 i/bin/sh /root/entrypoint.sh" -i /usr/local/bin/docker-php-entrypoint
 LABEL Author="Troy Tse <troy@holyhi.net>"
 LABEL Version="1.0"
