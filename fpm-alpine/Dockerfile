@@ -9,11 +9,12 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && docker-php-ext-install -j$(nproc) gd \
     && pecl install mcrypt-1.0.3 \
     && docker-php-ext-enable mcrypt \
-    && pecl install redis-5.2.2 \
+    && pecl install redis-5.3.2 \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache \
     && apk del --no-network .build-deps \
+    && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir="/usr/local/bin" --filename="composer" \
     && php -r "unlink('composer-setup.php');" \

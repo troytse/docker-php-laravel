@@ -14,13 +14,14 @@ This image built based-on the DockerHub official image. It included the required
 ### apache-buster:
 
 ```shell
-docker run
+docker run \
 --restart always \
 -d \
 -p 80:80 \
 -e SET_CRONTAB=On \
 -e APACHE_RUN_USER=#$(id -u) \
 -e APACHE_RUN_GROUP=#$(id -g) \
+-v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:apache-buster
 ```
@@ -28,12 +29,13 @@ troytse/php-laravel:apache-buster
 ### fpm-alpine:
 
 ```shell
-docker run
+docker run \
 --restart always \
 -d \
 -p 9000:9000 \
 -u $(id -u):$(id -g) \
 -e SET_CRONTAB=On \
+-v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:fpm-alpine
 ```
@@ -58,8 +60,8 @@ troytse/php-laravel:fpm-alpine
 |---|---|---|---|---|
 | bcmath | Core | ctype | curl | date |
 | dom | exif | fileinfo | filter | ftp |
-| gd | gettext | hash | iconv | json |
-| libxml | mbstring | mcrypt | mysqlnd | openssl |
+| **gd** | gettext | hash | iconv | json |
+| libxml | mbstring | **mcrypt** | mysqlnd | openssl |
 | pcntl | pcre | PDO | pdo_mysql | pdo_sqlite |
 | Phar | posix | readline | **redis** | Reflection |
 | session | shmop | SimpleXML | sockets | sodium |
