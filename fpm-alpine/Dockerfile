@@ -2,6 +2,7 @@ FROM php:fpm-alpine
 ENV SET_CRONTAB=off
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && apk update \
+    && apk add --no-cache --update busybox-suid \
     && apk add --no-cache icu libzip freetype libjpeg-turbo libpng libmcrypt gettext openssl \
     && apk add --no-cache --virtual .build-deps wget file git dpkg dpkg-dev zlib zlib-dev re2c libmagic make g++ gcc autoconf icu-dev libzip-dev freetype-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev gettext-dev openssl-dev \
     && docker-php-ext-install -j$(nproc) bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
@@ -13,7 +14,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && docker-php-ext-enable redis \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache \
-    && apk add --update busybox-suid \
     && apk del --no-network .build-deps \
     && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
