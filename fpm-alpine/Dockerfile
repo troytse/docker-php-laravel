@@ -13,6 +13,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && docker-php-ext-enable redis \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache \
+    && apk add --update busybox-suid \
     && apk del --no-network .build-deps \
     && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
