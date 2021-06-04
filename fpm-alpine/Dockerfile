@@ -1,14 +1,13 @@
 FROM php:fpm-alpine
 ENV SET_CRONTAB=off
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-    && apk update \
+RUN apk update \
     && apk add --no-cache --update busybox-suid \
     && apk add --no-cache icu libzip freetype libjpeg-turbo libpng libmcrypt gettext openssl \
     && apk add --no-cache --virtual .build-deps wget file git dpkg dpkg-dev zlib zlib-dev re2c libmagic make g++ gcc autoconf icu-dev libzip-dev freetype-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev gettext-dev openssl-dev \
     && docker-php-ext-install -j$(nproc) bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
-    && pecl install mcrypt-1.0.3 \
+    && pecl install mcrypt-1.0.4 \
     && docker-php-ext-enable mcrypt \
     && pecl install redis-5.3.2 \
     && docker-php-ext-enable redis \
