@@ -1,0 +1,1 @@
+* * * * * /var/cron/cron-entrypoint.sh >> /dev/null 2>&1

@@ -34,6 +34,8 @@ docker run \
 -d \
 -p 9000:9000 \
 -u $(id -u):$(id -g) \
+-e UID=$(id -u) \
+-e GID=$(id -g) \
 -e SET_CRONTAB=On \
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
