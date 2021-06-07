@@ -43,7 +43,7 @@ RUN mkdir /var/cron \
 COPY --chown=${UID}:${GID} cron-entrypoint.sh /var/cron/
 COPY --chown=${UID}:${GID} crontabs /var/cron/
 # Insert the supercronic daemon into the docker entrypoint
-RUN sed "2 i/usr/local/bin/supercronic /var/cron/crontabs" -i /usr/local/bin/docker-php-entrypoint
+RUN sed "2 i/bin/sh -c \"/usr/local/bin/supercronic /var/cron/crontabs >> /dev/null 2>&1\" &" -i /usr/local/bin/docker-php-entrypoint
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
 LABEL Version="1.0.1"
