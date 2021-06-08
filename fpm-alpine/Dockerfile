@@ -5,8 +5,9 @@ ENV USER=container
 ENV UID=1000
 ENV GID=1000
 # Create container user
-RUN addgroup -g ${GID} "${USER}"
-RUN adduser --disabled-password --gecos "" --home "$(pwd)" --ingroup "${USER}" --no-create-home --uid "${UID}" "${USER}"
+RUN addgroup -g ${GID} "${USER}" \
+    && adduser --disabled-password --gecos "" --home "/var/www" --ingroup "${USER}" --no-create-home --uid "${UID}" "${USER}" \
+    && chown ${UID}:${GID} /var/www
 # Install the necessary packages and PHP extensions
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && apk update \
