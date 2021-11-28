@@ -3,7 +3,8 @@ FROM php:fpm-alpine
 ENV UID=0
 ENV GID=0
 ENV SCHEDULE=off
-ENV QUEUE_WORKER=0
+ENV QUEUE_NUM_PROCS=0
+ENV QUEUE_ARGS="--daemon"
 ENV ENV=/etc/profile
 RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && echo "nameserver 223.5.5.5" > /etc/resolv.conf \
@@ -33,9 +34,6 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && docker-php-ext-enable redis \
 # Initialize php.ini
     && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
-# Prepare the configuration folders for supercronic and supervisor
-    && mkdir /var/cron \
-    && mkdir /var/supervisor \
 # Clean build dependency
     && apk del --no-network .build-deps
     # no subsequent need to built, after clean up the dependencies will reduce the space.
@@ -50,8 +48,8 @@ RUN curl -OL https://github.com/aptible/supercronic/releases/download/v0.1.12/su
     && chmod +x /usr/local/bin/supercronic-linux-amd64 \
     && ln -s /usr/local/bin/supercronic-linux-amd64 /usr/local/bin/supercronic
 # Copy files
-COPY supervisor.conf /var/supervisor/
-COPY crontabs /var/cron/
+COPY supervisor.conf /usr/local/etc/
+COPY crontab.txt /usr/local/etc/
 COPY artisan /usr/local/bin/
 COPY docker-cron-entrypoint /usr/local/bin/
 COPY docker-php-laravel-setup /usr/local/bin/

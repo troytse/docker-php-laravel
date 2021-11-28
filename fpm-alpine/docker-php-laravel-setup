@@ -21,13 +21,13 @@ if [ $(id -u) -eq 0 ]; then
         echo "export RUN_USER=$RUN_USER" >> /etc/profile
     fi
     # start supervisord
-    if [ $QUEUE_WORKER -gt 0 ]; then
-        (/usr/bin/supervisord -c /var/supervisor/supervisor.conf > /dev/null) &
+    if [ $QUEUE_NUM_PROCS -gt 0 ]; then
+        (/usr/bin/supervisord -c /usr/local/etc/supervisor.conf > /dev/null) &
         echo "supervisord started"
     fi
     # start supercronic
     if [ `expr match "$SCHEDULE" "[O|o][N|n]$"` -ne 0 ]; then
-        (/usr/local/bin/supercronic /var/cron/crontabs > /dev/null) &
+        (/usr/local/bin/supercronic /usr/local/etc/crontab.txt > /dev/null) &
         echo "supercronic started"
     fi
     # replace fpm user

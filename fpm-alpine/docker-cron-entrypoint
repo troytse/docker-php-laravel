@@ -1,5 +1,5 @@
 #!/bin/sh
-/bin/cd /var/www/html
+cd /var/www/html
 if [ -n $RUN_USER ]; then
     su - $RUN_USER -c "/usr/local/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1"
 else

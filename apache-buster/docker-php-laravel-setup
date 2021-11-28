@@ -25,13 +25,13 @@ if [ $(id -u) -eq 0 ]; then
         echo "export APACHE_RUN_GROUP=$RUN_USER" >> /root/.bashrc
     fi
     # start supervisord
-    if [ $QUEUE_WORKER -gt 0 ]; then
-        (/usr/bin/supervisord -c /var/supervisor/supervisor.conf > /dev/null) &
+    if [ $QUEUE_NUM_PROCS -gt 0 ]; then
+        (/usr/bin/supervisord -c /usr/local/etc/supervisor.conf > /dev/null) &
         echo "supervisord started"
     fi
     # start cron
     if [ `expr match "$SCHEDULE" "[O|o][N|n]$"` -ne 0 ]; then
-        crontab /var/cron/crontab
+        /usr/bin/crontab /usr/local/etc/crontab.txt
         /etc/init.d/cron start
         echo "cron started"
     fi

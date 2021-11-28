@@ -2,7 +2,8 @@ FROM php:apache-buster
 ENV UID=0
 ENV GID=0
 ENV SCHEDULE=off
-ENV QUEUE_WORKER=0
+ENV QUEUE_NUM_PROCS=0
+ENV QUEUE_ARGS="--daemon"
 RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && echo "nameserver 223.5.5.5" > /etc/resolv.conf \
     && echo "nameserver 223.6.6.6" >> /etc/resolv.conf \
@@ -17,10 +18,6 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache \
-# Update SSL certs
-    # && wget -P /etc/ssl/certs/ http://curl.haxx.se/ca/cacert.pem \
-    # && chmod 744 /etc/ssl/certs/cacert.pem \
-    # && pecl channel-update pecl.php.net \
 # Install php-mcrypt
     && pecl install mcrypt \
     && docker-php-ext-enable mcrypt \
@@ -38,8 +35,8 @@ RUN curl -OL https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 # Copy files
-COPY supervisor.conf /var/supervisor/
-COPY crontabs /var/cron/
+COPY supervisor.conf /usr/local/etc/
+COPY crontab.txt /usr/local/etc/
 COPY artisan /usr/local/bin/
 COPY docker-cron-entrypoint /usr/local/bin/
 COPY docker-php-laravel-setup /usr/local/bin/
