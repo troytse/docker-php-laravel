@@ -5,7 +5,6 @@ ENV GID=0
 ENV SCHEDULE=off
 ENV QUEUE_NUM_PROCS=0
 ENV QUEUE_ARGS="--daemon"
-ENV ENV=/etc/profile
 RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && echo "nameserver 223.5.5.5" > /etc/resolv.conf \
     && echo "nameserver 223.6.6.6" >> /etc/resolv.conf \

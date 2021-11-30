@@ -17,7 +17,7 @@ if [ $(id -u) -eq 0 ]; then
         fi
     fi
     # export the container user
-    if [ -z "$(cat /root/profile | grep RUN_USER=$RUN_USER)" ]; then
+    if [ -z "$(cat /etc/profile | grep RUN_USER=$RUN_USER)" ]; then
         echo "export RUN_USER=$RUN_USER" >> /etc/profile
     fi
     # start supervisord

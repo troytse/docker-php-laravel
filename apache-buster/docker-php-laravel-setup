@@ -19,10 +19,11 @@ if [ $(id -u) -eq 0 ]; then
         export APACHE_RUN_GROUP=$RUN_USER
     fi
     # export the container user
-    if [ -z "$(cat /root/.bashrc | grep RUN_USER=$RUN_USER)" ]; then
-        echo "export RUN_USER=$RUN_USER" >> /root/.bashrc
-        echo "export APACHE_RUN_USER=$RUN_USER" >> /root/.bashrc
-        echo "export APACHE_RUN_GROUP=$RUN_USER" >> /root/.bashrc
+    if [ -z "$(cat /root/.env | grep RUN_USER=$RUN_USER)" ]; then
+        echo "export RUN_USER=$RUN_USER" >> /root/.env
+        echo "export APACHE_RUN_USER=$RUN_USER" >> /root/.env
+        echo "export APACHE_RUN_GROUP=$RUN_USER" >> /root/.env
+        echo ". /root/.env" >> /root/.bashrc
     fi
     # start supervisord
     if [ $QUEUE_NUM_PROCS -gt 0 ]; then
