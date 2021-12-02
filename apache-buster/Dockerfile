@@ -1,4 +1,5 @@
-FROM php:apache-buster
+# php-mcrypt is not compatible with PHP8.1 currently.
+FROM php:8.0-apache-buster
 ENV UID=0
 ENV GID=0
 ENV SCHEDULE=off
@@ -50,5 +51,5 @@ RUN chmod +x /usr/local/bin/composer \
     && sed "2 i. /usr/local/bin/docker-php-laravel-setup" -i /usr/local/bin/docker-php-entrypoint
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
-LABEL Version="1.1.0"
+LABEL Version="1.1.1"
 LABEL Description="The Laravel runtime environment on Apache with PHP latest version."

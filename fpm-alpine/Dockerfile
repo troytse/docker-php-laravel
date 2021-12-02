@@ -1,4 +1,5 @@
-FROM php:fpm-alpine
+# php-mcrypt is not compatible with PHP8.1 currently.
+FROM php:8.0-fpm-alpine
 # Environment
 ENV UID=0
 ENV GID=0
