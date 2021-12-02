@@ -63,5 +63,5 @@ RUN chmod +x /usr/local/bin/composer \
     && sed "2 i. /usr/local/bin/docker-php-laravel-setup" -i /usr/local/bin/docker-php-entrypoint
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
-LABEL Version="1.1.0"
+LABEL Version="1.1.1"
 LABEL Description="The Laravel runtime environment on PHP-FPM latest version."
