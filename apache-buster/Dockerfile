@@ -31,17 +31,19 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && a2enmod rewrite
 # Install Composer
 RUN curl -OL https://mirrors.aliyun.com/composer/composer.phar \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer \
-    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+    && mv composer.phar /usr/local/bin/composer.phar \
+    && chmod +x /usr/local/bin/composer.phar \
+    && composer.phar config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 # Copy files
 COPY supervisor.conf /usr/local/etc/
 COPY crontab.txt /usr/local/etc/
+COPY composer /usr/local/bin/
 COPY artisan /usr/local/bin/
 COPY docker-cron-entrypoint /usr/local/bin/
 COPY docker-php-laravel-setup /usr/local/bin/
 # Update permissions
-RUN chmod +x /usr/local/bin/artisan \
+RUN chmod +x /usr/local/bin/composer \
+    && chmod +x /usr/local/bin/artisan \
     && chmod +x /usr/local/bin/docker-cron-entrypoint \
     && chmod +x /usr/local/bin/docker-php-laravel-setup \
 # Insert the setup command into the docker entrypoint

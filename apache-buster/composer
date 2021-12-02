@@ -1,0 +1,8 @@
+#!/bin/sh
+. /root/.env
+command="/usr/local/bin/composer.phar --no-cache $@"
+if [ -n $RUN_USER ]; then
+    su - $RUN_USER -c "$command"
+else
+    /bin/sh -c "$command"
+fi
