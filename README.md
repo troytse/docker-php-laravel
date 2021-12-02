@@ -125,9 +125,31 @@ PID   USER     TIME  COMMAND
 ## Console Commands
 - Run artisan command in the container.
 
-```shell
-▶ docker exec -it <container_name> artisan <command>
-```
+    ```shell
+    ▶ docker exec -it <container_name> artisan <command>
+    ```
+
+- Run composer command in the container.
+
+    ```shell
+    ▶ docker exec -it <container_name> composer <command>
+    ```
+
+- You can create a shell script in your project directory to quickly call them.
+
+    - For example, create a shell named **"docker_exec"** and content as follows:
+    ```shell
+    #!/bin/sh
+    sudo docker exec -it your_container_name $@ 
+    ```
+
+    - Then you can call them like this:
+    ```shell
+    ▶ ./docker_exec artisan make:job DoSomething
+    ▶ ./docker_exec composer dump-autoload
+    ```
+
+    - **(The above operations will be run as the specified user by `$UID` and `$GID`.)**
 
 # Included Extensions
 
