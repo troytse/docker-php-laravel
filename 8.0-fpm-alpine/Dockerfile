@@ -1,6 +1,5 @@
 # php-mcrypt is not compatible with PHP8.1 currently.
-FROM php:7.4-fpm-alpine
-
+FROM php:8.0-fpm-alpine
 # Environment
 ENV UID=0
 ENV GID=0
@@ -21,7 +20,6 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && docker-php-ext-install -j$(nproc) soap ldap intl bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install -j$(nproc) imap \
-    && docker-php-ext-install -j$(nproc) bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-configure opcache --enable-opcache \

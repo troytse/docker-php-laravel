@@ -169,10 +169,16 @@ gd
 gettext
 hash
 iconv
+igbinary
+imap
+intl
 json
+ldap
 libxml
 mbstring
 mcrypt
+memcached
+msgpack
 mysqlnd
 openssl
 pcntl
@@ -188,6 +194,7 @@ Reflection
 session
 shmop
 SimpleXML
+soap
 sockets
 sodium
 SPL

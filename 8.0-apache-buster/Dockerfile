@@ -1,7 +1,5 @@
 # php-mcrypt is not compatible with PHP8.1 currently.
-FROM php:7.4-fpm-alpine
-
-# Environment
+FROM php:8.0-apache-buster
 ENV UID=0
 ENV GID=0
 ENV SCHEDULE=off
@@ -11,23 +9,18 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && echo "nameserver 223.5.5.5" > /etc/resolv.conf \
     && echo "nameserver 223.6.6.6" >> /etc/resolv.conf \
 # Install the necessary packages and PHP extensions
-    && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-    && apk update \
-    && apk add --no-cache --update busybox-suid \
-    && apk add --no-cache icu libzip freetype libjpeg-turbo libpng libmcrypt gettext openssl imap krb5 libxml2 openldap libmemcached c-client \
-    && apk add --no-cache supervisor \
-    # dependencies for build
-    && apk add --no-cache --virtual .build-deps wget file git dpkg dpkg-dev zlib zlib-dev re2c libmagic make g++ gcc autoconf icu-dev libzip-dev freetype-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev gettext-dev openssl-dev imap-dev krb5-dev libxml2-dev openldap-dev libmemcached-dev \
+    && sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && apt-get update && apt-get install -y apt-utils wget && apt-get upgrade -y && apt-get autoremove -y \
+    && apt-get install -y --no-install-recommends sudo cron supervisor libzip-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libc-client-dev libkrb5-dev libxml2-dev libldap2-dev libmemcached-dev \
+    && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install -j$(nproc) soap ldap intl bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install -j$(nproc) imap \
-    && docker-php-ext-install -j$(nproc) bcmath zip exif gettext sockets pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache \
-# Update pecl channel
-    && pecl channel-update pecl.php.net \
 # install php-msgpack
     && pecl install msgpack \
     && docker-php-ext-enable msgpack \
@@ -48,21 +41,16 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && ( cd igbinary && phpize && ./configure CFLAGS="-O2 -g" --enable-igbinary && make -j$(nproc) && make install ) \
     && rm -r igbinary \
     && docker-php-ext-enable igbinary \
-# Initialize php.ini
+# Initialize php.ini and update configurations
     && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
-# Clean build dependency
-    && apk del --no-network .build-deps
-    # no subsequent need to built, after clean up the dependencies will reduce the space.
+    && mkdir -p /var/www/html/public \
+    && sed -i 's/\/var\/www\/html/\/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf \
+    && a2enmod rewrite
 # Install Composer
 RUN curl -OL https://mirrors.aliyun.com/composer/composer.phar \
     && mv composer.phar /usr/local/bin/composer.phar \
     && chmod +x /usr/local/bin/composer.phar \
     && composer.phar config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-# Install suercronic
-RUN curl -OL https://github.com/aptible/supercronic/releases/download/v0.1.12/supercronic-linux-amd64 \
-    && mv supercronic-linux-amd64 /usr/local/bin/supercronic-linux-amd64 \
-    && chmod +x /usr/local/bin/supercronic-linux-amd64 \
-    && ln -s /usr/local/bin/supercronic-linux-amd64 /usr/local/bin/supercronic
 # Copy files
 COPY supervisor.conf /usr/local/etc/
 COPY crontab.txt /usr/local/etc/
@@ -80,4 +68,4 @@ RUN chmod +x /usr/local/bin/composer \
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
 LABEL Version="1.2.0"
-LABEL Description="The Laravel runtime environment on PHP-FPM latest version."
+LABEL Description="The Laravel runtime environment on Apache with PHP latest version."

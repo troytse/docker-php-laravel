@@ -1,0 +1,8 @@
+#!/bin/sh
+. /etc/profile
+command="cd $PWD && /usr/local/bin/php /var/www/html/artisan $@"
+if [ -n $RUN_USER ]; then
+    su - $RUN_USER -c "$command"
+else
+    /bin/sh -c "$command"
+fi
