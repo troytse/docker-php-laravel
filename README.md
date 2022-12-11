@@ -31,7 +31,9 @@ The Apache service, scheduled tasks (by `artisan schedule:run`), queue work proc
 -e GID=$(id -g) \
 -e SCHEDULE=On \
 -e QUEUE_NUM_PROCS=3 \
--e QUEUE_ARGS="--daemon" \
+-e QUEUE_ARGS="--daemon --queue=default,high" \
+-e QUEUE2_NUM_PROC=2 \
+-e QUEUE2_ARGS="--daemon --queue=low" \
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:apache-buster
@@ -51,9 +53,11 @@ contain+    60  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREG
 contain+    61  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREGROUND
 contain+    62  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREGROUND
 root        65  0.0  0.1  26204 16452 ?        Ss   10:27   0:00 /usr/bin/python2 /usr/bin/supervisord -c /var/supervisor/supervisor.conf
-contain+    66  1.0  0.2 107956 46652 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon
-contain+    67  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon
-contain+    68  1.0  0.2 107956 46968 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon
+contain+    66  1.0  0.2 107956 46652 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+contain+    67  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+contain+    68  1.0  0.2 107956 46968 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+contain+    70  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
+contain+    71  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
 root        93  0.3  0.0   3868  3220 pts/0    Ss   10:27   0:00 bash
 root        99  0.0  0.0   7640  2732 pts/0    R+   10:27   0:00 ps -aux
 ```
@@ -74,7 +78,9 @@ The PHP-FPM processes, scheduled tasks (by `artisan schedule:run`), queue work p
 -e GID=$(id -g) \
 -e SCHEDULE=On \
 -e QUEUE_NUM_PROC=3 \
--e QUEUE_ARGS="--daemon" \
+-e QUEUE_ARGS="--daemon --queue=default,high" \
+-e QUEUE2_NUM_PROC=2 \
+-e QUEUE2_ARGS="--daemon --queue=low" \
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:fpm-alpine
@@ -91,9 +97,11 @@ PID   USER     TIME  COMMAND
    36 containe  0:00 php-fpm: pool www
    37 containe  0:00 php-fpm: pool www
    38 root      0:00 {supervisord} /usr/bin/python3 /usr/bin/supervisord -c /var/supervisor/supervisor.conf
-   39 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon
-   40 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon
-   41 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon
+   39 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+   40 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+   41 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+   42 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
+   43 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
    83 root      0:00 ash
    92 root      0:00 ps -A
 ```
@@ -109,11 +117,12 @@ PID   USER     TIME  COMMAND
 **(On/Off, Default: Off)**
 - This variable specifies whether to add the "php artisan schedule:run" into the crontab after the container created.
 
-## QUEUE_NUM_PROCS
+## QUEUE_NUM_PROCS / QUEUE2_NUM_PROCS / QUEUE3_NUM_PROCS
 **(Number of work processes, Default: 0, 0 as disabled)**
 - This variable specify how many work processes to start for "artisan queue:work".
 
-## QUEUE_ARGS
+
+## QUEUE_ARGS / QUEUE2_ARGS / QUEUE3_ARGS
 **(String, Default: "--daemon")**
 - This variable specifies the worker arguments for "artisan queue:work $QUEUE_ARGS".
 

@@ -6,6 +6,10 @@ ENV GID=0
 ENV SCHEDULE=off
 ENV QUEUE_NUM_PROCS=0
 ENV QUEUE_ARGS="--daemon"
+ENV QUEUE2_NUM_PROCS=0
+ENV QUEUE2_ARGS="--daemon"
+ENV QUEUE3_NUM_PROCS=0
+ENV QUEUE3_ARGS="--daemon"
 RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && echo "nameserver 223.5.5.5" > /etc/resolv.conf \
     && echo "nameserver 223.6.6.6" >> /etc/resolv.conf \
@@ -13,6 +17,7 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && apk update \
     && apk add --no-cache --update busybox-suid \
+    && apk add --no-cache --allow-untrusted --repository http://mirrors.aliyun.com/alpine/edge/community/ gnu-libiconv \
     && apk add --no-cache icu libzip freetype libjpeg-turbo libpng libmcrypt gettext openssl imap krb5 libxml2 openldap libmemcached c-client \
     && apk add --no-cache supervisor \
     # dependencies for build
