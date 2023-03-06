@@ -9,12 +9,9 @@ ENV QUEUE2_NUM_PROCS=0
 ENV QUEUE2_ARGS="--daemon"
 ENV QUEUE3_NUM_PROCS=0
 ENV QUEUE3_ARGS="--daemon"
-RUN cp /etc/resolv.conf /etc/resolv.conf.original \
-    && echo "nameserver 223.5.5.5" > /etc/resolv.conf \
-    && echo "nameserver 223.6.6.6" >> /etc/resolv.conf \
 # Install the necessary packages and PHP extensions
-    && sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
-    && sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
+RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
+    && sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
     && apt-get update && apt-get install -y apt-utils wget && apt-get upgrade -y && apt-get autoremove -y \
     && apt-get install -y --no-install-recommends sudo cron supervisor libzip-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libc-client-dev libkrb5-dev libxml2-dev libldap2-dev libmemcached-dev \
     && rm -rf /var/lib/apt/lists/* \
@@ -37,7 +34,7 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && pecl install redis \
     && docker-php-ext-enable redis \
 # install php-igbinary
-    && curl -fsSL 'https://codeload.github.com/igbinary/igbinary/tar.gz/refs/tags/3.2.7' -o igbinary.tar.gz \
+    && curl -fsSL 'https://codeload.github.com/igbinary/igbinary/tar.gz/refs/tags/3.2.14' -o igbinary.tar.gz \
     && mkdir -p igbinary \
     && tar -xf igbinary.tar.gz -C igbinary --strip-components=1 \
     && rm igbinary.tar.gz \
@@ -45,7 +42,7 @@ RUN cp /etc/resolv.conf /etc/resolv.conf.original \
     && rm -r igbinary \
     && docker-php-ext-enable igbinary \
 # Install php-mcrypt (PHP 8.1.0+ cannot be installed via PECL)
-    && curl -fsSL 'https://codeload.github.com/php/pecl-encryption-mcrypt/tar.gz/refs/tags/1.0.4' -o mcrypt.tar.gz \
+    && curl -fsSL 'https://codeload.github.com/php/pecl-encryption-mcrypt/tar.gz/refs/tags/1.0.6' -o mcrypt.tar.gz \
     && mkdir -p mcrypt \
     && tar -xf mcrypt.tar.gz -C mcrypt --strip-components=1 \
     && rm mcrypt.tar.gz \
