@@ -3,18 +3,7 @@ FROM php:fpm-alpine
 ENV UID=0
 ENV GID=0
 ENV SCHEDULE=off
-ENV QUEUE_NUM_PROCS=0
-ENV QUEUE_ARGS="--daemon"
-ENV QUEUE2_NUM_PROCS=0
-ENV QUEUE2_ARGS="--daemon"
-ENV QUEUE3_NUM_PROCS=0
-ENV QUEUE3_ARGS="--daemon"
-ENV ARTISAN_NUM_PROCS=0
-ENV ARTISAN_ARGS=""
-ENV ARTISAN2_NUM_PROCS=0
-ENV ARTISAN2_ARGS=""
-ENV ARTISAN3_NUM_PROCS=0
-ENV ARTISAN3_ARGS=""
+ENV SUPERVISORD=off
 # Install the necessary packages and PHP extensions
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
     && apk update \
@@ -42,6 +31,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/re
 # Install php-redis
     && pecl install redis \
     && docker-php-ext-enable redis \
+# Install swoole
+    && pecl install swoole \
+    && docker-php-ext-enable swoole \
 # install php-igbinary
     && curl -fsSL 'https://codeload.github.com/igbinary/igbinary/tar.gz/refs/tags/3.2.14' -o igbinary.tar.gz \
     && mkdir -p igbinary \
@@ -74,7 +66,7 @@ RUN curl -OL https://github.com/aptible/supercronic/releases/download/v0.2.26/su
     && chmod +x /usr/local/bin/supercronic-linux-amd64 \
     && ln -s /usr/local/bin/supercronic-linux-amd64 /usr/local/bin/supercronic
 # Copy files
-COPY supervisor.conf /usr/local/etc/
+COPY supervisord.conf /usr/local/etc/
 COPY crontab.txt /usr/local/etc/
 COPY composer /usr/local/bin/
 COPY artisan /usr/local/bin/
@@ -89,5 +81,5 @@ RUN chmod +x /usr/local/bin/composer \
     && sed "2 i. /usr/local/bin/docker-php-laravel-setup" -i /usr/local/bin/docker-php-entrypoint
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
-LABEL Version="1.2.1"
+LABEL Version="1.2.2"
 LABEL Description="The Laravel runtime environment on PHP-FPM latest version."

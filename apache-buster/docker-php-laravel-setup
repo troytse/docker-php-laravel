@@ -26,8 +26,8 @@ if [ $(id -u) -eq 0 ]; then
         echo ". /root/.env" >> /root/.bashrc
     fi
     # start supervisord
-    if [ $QUEUE_NUM_PROCS -gt 0 ]; then
-        (/usr/bin/supervisord -c /usr/local/etc/supervisor.conf > /dev/null) &
+    if [ `expr match "$SUPERVISORD" "[O|o][N|n]$"` -ne 0 ]; then
+        (/usr/bin/supervisord -c /usr/local/etc/supervisord.conf > /dev/null) &
         echo "supervisord started"
     fi
     # start cron

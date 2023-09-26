@@ -8,8 +8,7 @@ This image was built based on the DockerHub official image. It included the requ
 - [Environment Variables](#environment-variables)
   - [UID / GID](#uid-gid)
   - [SCHEDULE](#schedule)
-  - [QUEUE_NUM_PROCS](#queue_num_procs)
-  - [QUEUE_ARGS](#queue_args)
+  - [SUPERVISORD](#supervisord)
 - [Console Commands](#console-commands)
 - [Included Extensions](#included-extensions)
 
@@ -30,10 +29,7 @@ The Apache service, scheduled tasks (by `artisan schedule:run`), queue work proc
 -e UID=$(id -u) \
 -e GID=$(id -g) \
 -e SCHEDULE=On \
--e QUEUE_NUM_PROCS=3 \
--e QUEUE_ARGS="--daemon --queue=default,high" \
--e QUEUE2_NUM_PROC=2 \
--e QUEUE2_ARGS="--daemon --queue=low" \
+-e SUPERVISORD=On \
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:apache-buster
@@ -77,10 +73,7 @@ The PHP-FPM processes, scheduled tasks (by `artisan schedule:run`), queue work p
 -e UID=$(id -u) \
 -e GID=$(id -g) \
 -e SCHEDULE=On \
--e QUEUE_NUM_PROC=3 \
--e QUEUE_ARGS="--daemon --queue=default,high" \
--e QUEUE2_NUM_PROC=2 \
--e QUEUE2_ARGS="--daemon --queue=low" \
+-e SUPERVISORD=On \
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:fpm-alpine
@@ -113,26 +106,39 @@ PID   USER     TIME  COMMAND
 - These two variables specify to run as the user for the Apache/PHP-FPM, scheduled task, queue work, and artisan command.
 - **(for apache-buster, `$UID` and `$GID` will override the `$APACHE_RUN_USER` and `$APACHE_RUN_GROUP`)**
 
-## SCHEDULE
+## SUPERVISORD
 **(On/Off, Default: Off)**
-- This variable specifies whether to add the "php artisan schedule:run" into the crontab after the container created.
+- This variable specifies whether to run the supervisor service after the container is created.
 
-## QUEUE_NUM_PROCS / QUEUE2_NUM_PROCS / QUEUE3_NUM_PROCS
-**(Number of work processes, Default: 0, 0 as disabled)**
-- This variable specify how many work processes to start for "artisan queue:work".
+## SUPER
+**(On/Off, Default: Off)**
+- This variable specifies whether to add the "php artisan schedule:run" into the crontab after the container is created.
 
+## Supervisor configuration
+**(Optional)**
+- Put your customized "supervisor.conf" file in the project folder.
+    - Example:
+    ```conf
+    [program:queue-work-default]
+    process_name=%(program_name)s_%(process_num)02d
+    directory=/var/www/html
+    command=/usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
+    autostart=true
+    autorestart=true
+    user=%(ENV_RUN_USER)s
+    numprocs=3
+    redirect_stderr=true
 
-## QUEUE_ARGS / QUEUE2_ARGS / QUEUE3_ARGS
-**(String, Default: "--daemon")**
-- This variable specifies the worker arguments for "artisan queue:work $QUEUE_ARGS".
-
-## ARTISAN_NUM_PROCS / ARTISAN2_NUM_PROCS / ARTISAN3_NUM_PROCS
-**(Number of work processes, Default: 0, 0 as disabled)**
-- This variable specify how many work processes to start for "artisan $ARTISAN_ARGS".
-
-## ARTISAN_ARGS / ARTISAN2_ARGS / ARTISAN3_ARGS
-**(String, Default: "")**
-- This variable specifies the worker arguments for "artisan $ARTISAN_ARGS".
+    [program:queue-work-low]
+    process_name=%(program_name)s_%(process_num)02d
+    directory=/var/www/html
+    command=/usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
+    autostart=true
+    autorestart=true
+    user=%(ENV_RUN_USER)s
+    numprocs=2
+    redirect_stderr=true
+    ```
 
 ## Other Environment Variables
 **For other environment variables, please reference to the base image**
@@ -217,6 +223,7 @@ sodium
 SPL
 sqlite3
 standard
+swoole
 sysvmsg
 sysvsem
 sysvshm
