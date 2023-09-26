@@ -9,6 +9,12 @@ ENV QUEUE2_NUM_PROCS=0
 ENV QUEUE2_ARGS="--daemon"
 ENV QUEUE3_NUM_PROCS=0
 ENV QUEUE3_ARGS="--daemon"
+ENV ARTISAN_NUM_PROCS=0
+ENV ARTISAN_ARGS=""
+ENV ARTISAN2_NUM_PROCS=0
+ENV ARTISAN2_ARGS=""
+ENV ARTISAN3_NUM_PROCS=0
+ENV ARTISAN3_ARGS=""
 # Install the necessary packages and PHP extensions
 RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
     && sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
@@ -75,5 +81,5 @@ RUN chmod +x /usr/local/bin/composer \
     && sed "2 i. /usr/local/bin/docker-php-laravel-setup" -i /usr/local/bin/docker-php-entrypoint
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
-LABEL Version="1.2.0"
+LABEL Version="1.2.1"
 LABEL Description="The Laravel runtime environment on Apache with PHP latest version."

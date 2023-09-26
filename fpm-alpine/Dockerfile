@@ -9,6 +9,12 @@ ENV QUEUE2_NUM_PROCS=0
 ENV QUEUE2_ARGS="--daemon"
 ENV QUEUE3_NUM_PROCS=0
 ENV QUEUE3_ARGS="--daemon"
+ENV ARTISAN_NUM_PROCS=0
+ENV ARTISAN_ARGS=""
+ENV ARTISAN2_NUM_PROCS=0
+ENV ARTISAN2_ARGS=""
+ENV ARTISAN3_NUM_PROCS=0
+ENV ARTISAN3_ARGS=""
 # Install the necessary packages and PHP extensions
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
     && apk update \
@@ -63,7 +69,7 @@ RUN curl -OL https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/local/bin/composer.phar \
     && composer.phar config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 # Install suercronic
-RUN curl -OL https://github.com/aptible/supercronic/releases/download/v0.2.2/supercronic-linux-amd64 \
+RUN curl -OL https://github.com/aptible/supercronic/releases/download/v0.2.26/supercronic-linux-amd64 \
     && mv supercronic-linux-amd64 /usr/local/bin/supercronic-linux-amd64 \
     && chmod +x /usr/local/bin/supercronic-linux-amd64 \
     && ln -s /usr/local/bin/supercronic-linux-amd64 /usr/local/bin/supercronic
@@ -83,5 +89,5 @@ RUN chmod +x /usr/local/bin/composer \
     && sed "2 i. /usr/local/bin/docker-php-laravel-setup" -i /usr/local/bin/docker-php-entrypoint
 # Labels
 LABEL Author="Troy Tse <troy@holyhi.net>"
-LABEL Version="1.2.0"
+LABEL Version="1.2.1"
 LABEL Description="The Laravel runtime environment on PHP-FPM latest version."

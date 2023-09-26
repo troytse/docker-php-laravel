@@ -126,6 +126,14 @@ PID   USER     TIME  COMMAND
 **(String, Default: "--daemon")**
 - This variable specifies the worker arguments for "artisan queue:work $QUEUE_ARGS".
 
+## ARTISAN_NUM_PROCS / ARTISAN2_NUM_PROCS / ARTISAN3_NUM_PROCS
+**(Number of work processes, Default: 0, 0 as disabled)**
+- This variable specify how many work processes to start for "artisan $ARTISAN_ARGS".
+
+## ARTISAN_ARGS / ARTISAN2_ARGS / ARTISAN3_ARGS
+**(String, Default: "")**
+- This variable specifies the worker arguments for "artisan $ARTISAN_ARGS".
+
 ## Other Environment Variables
 **For other environment variables, please reference to the base image**
 - [php/apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=apache-buster)
