@@ -14,6 +14,9 @@ if [ $(id -u) -eq 0 ]; then
             # create user
             /usr/sbin/addgroup --gid $GID $RUN_USER
             /usr/sbin/adduser --disabled-password --gecos "" --home /var/www --ingroup container --no-create-home --uid $UID $RUN_USER
+            # create config folder
+            mkdir -p /var/www/.config
+            chown -R $UID:$GID /var/www/.config
         fi
         export APACHE_RUN_USER=$RUN_USER
         export APACHE_RUN_GROUP=$RUN_USER
