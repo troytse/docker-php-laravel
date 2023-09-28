@@ -38,8 +38,7 @@ troytse/php-laravel:apache-buster
 ### A typical example for `apache-buster`:
 
 ```shell
-▶ docker exec -it sample bash
-root@sample:/var/www/html# ps -aux
+▶ docker exec -it sample ps -aux
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root         1  0.8  0.2 223304 32828 ?        Ss   10:27   0:00 apache2 -DFOREGROUND
 root        47  0.0  0.0   5512  2060 ?        Ss   10:27   0:00 /usr/sbin/cron
@@ -48,13 +47,12 @@ contain+    59  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREG
 contain+    60  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREGROUND
 contain+    61  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREGROUND
 contain+    62  0.0  0.0 223336 10068 ?        S    10:27   0:00 apache2 -DFOREGROUND
-root        65  0.0  0.1  26204 16452 ?        Ss   10:27   0:00 /usr/bin/python2 /usr/bin/supervisord -c /var/supervisor/supervisor.conf
+root        65  0.0  0.1  26204 16452 ?        Ss   10:27   0:00 /usr/bin/python2 /usr/bin/supervisord -c /var/local/etc/supervisord.conf
 contain+    66  1.0  0.2 107956 46652 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
 contain+    67  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
 contain+    68  1.0  0.2 107956 46968 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
 contain+    70  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
 contain+    71  0.9  0.2 107956 46636 ?        S    10:27   0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
-root        93  0.3  0.0   3868  3220 pts/0    Ss   10:27   0:00 bash
 root        99  0.0  0.0   7640  2732 pts/0    R+   10:27   0:00 ps -aux
 ```
 
@@ -82,20 +80,19 @@ troytse/php-laravel:fpm-alpine
 ### A typical example for `fpm-alpine`:
 
 ```shell
-▶ docker exec -it sample ash
+▶ docker exec -it sample ps -a
 sample:/var/www/html# ps -A
 PID   USER     TIME  COMMAND
     1 root      0:00 php-fpm: master process (/usr/local/etc/php-fpm.conf)
-   25 root      0:00 /usr/local/bin/supercronic /var/cron/crontabs
+   25 root      0:00 /usr/local/bin/supercronic /usr/local/etc/crontab.txt
    36 containe  0:00 php-fpm: pool www
    37 containe  0:00 php-fpm: pool www
-   38 root      0:00 {supervisord} /usr/bin/python3 /usr/bin/supervisord -c /var/supervisor/supervisor.conf
+   38 root      0:00 {supervisord} /usr/bin/python3 /usr/bin/supervisord -c /usr/local/etc/supervisord.conf
    39 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
    40 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
    41 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=default,high
    42 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
    43 containe  0:00 /usr/local/bin/php /var/www/html/artisan queue:work --daemon --queue=low
-   83 root      0:00 ash
    92 root      0:00 ps -A
 ```
 
@@ -116,7 +113,7 @@ PID   USER     TIME  COMMAND
 
 ## Supervisor configuration
 **(Optional)**
-- Put your customized "supervisor.conf" file in the project folder.
+- Put your customized "supervisord.conf" file in the project folder.
     - Example:
     ```conf
     [program:queue-work-default]
