@@ -3,7 +3,7 @@ This image was built based on the DockerHub official image. It included the requ
 
 # Table Of Contents
 - [Usage](#usage)
-  - [apache-buster:](#apache-buster)
+  - [apache:](#apache)
   - [fpm-alpine:](#fpm-alpine)
 - [Environment Variables](#environment-variables)
   - [UID / GID](#uid-gid)
@@ -14,8 +14,8 @@ This image was built based on the DockerHub official image. It included the requ
 
 # Usage
 
-## apache-buster:
-This image was built based-on [php/apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=apache-buster) image. Add support to Laravel's scheduled tasks, queue, and specify the execution user with `$UID` and `$GID`. The container will create the run user at startup.
+## apache:
+This image was built based-on [php/apache](https://hub.docker.com/_/php?tab=tags&page=1&name=apache) image. Add support to Laravel's scheduled tasks, queue, and specify the execution user with `$UID` and `$GID`. The container will create the run user at startup.
 
 The Apache service, scheduled tasks (by `artisan schedule:run`), queue work processes (by `artisan queue:work`), and any commands by artisan will run as a user with `$UID` and `$GID`.
 
@@ -32,10 +32,10 @@ The Apache service, scheduled tasks (by `artisan schedule:run`), queue work proc
 -e SUPERVISORD=On \
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
-troytse/php-laravel:apache-buster
+troytse/php-laravel:apache
 ```
 
-### A typical example for `apache-buster`:
+### A typical example for `apache`:
 
 ```shell
 ▶ docker exec -it sample ps -aux
@@ -101,7 +101,7 @@ PID   USER     TIME  COMMAND
 ## UID / GID
 **(Default: 0)**
 - These two variables specify to run as the user for the Apache/PHP-FPM, scheduled task, queue work, and artisan command.
-- **(for apache-buster, `$UID` and `$GID` will override the `$APACHE_RUN_USER` and `$APACHE_RUN_GROUP`)**
+- **(for apache, `$UID` and `$GID` will override the `$APACHE_RUN_USER` and `$APACHE_RUN_GROUP`)**
 
 ## SUPERVISORD
 **(On/Off, Default: Off)**
@@ -139,7 +139,7 @@ PID   USER     TIME  COMMAND
 
 ## Other Environment Variables
 **For other environment variables, please reference to the base image**
-- [php/apache-buster](https://hub.docker.com/_/php?tab=tags&page=1&name=apache-buster)
+- [php/apache](https://hub.docker.com/_/php?tab=tags&page=1&name=apache)
 - [php/fpm-alpine](https://hub.docker.com/_/php?tab=tags&page=1&name=fpm-alpine)
 
 ## Console Commands
@@ -196,7 +196,6 @@ json
 ldap
 libxml
 mbstring
-mcrypt
 memcached
 msgpack
 mysqlnd
