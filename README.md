@@ -20,11 +20,11 @@ This image was built based-on [php/apache](https://hub.docker.com/_/php?tab=tags
 The Apache service, scheduled tasks (by `artisan schedule:run`), queue work processes (by `artisan queue:work`), and any commands by artisan will run as a user with `$UID` and `$GID`.
 
 ```shell
-▶ docker run \
+# for docker
+▶ docker run -d \
 --restart always \
 --hostname simple \
 --name simple
--d \
 -p 80:80 \
 -e UID=$(id -u) \
 -e GID=$(id -g) \
@@ -33,6 +33,22 @@ The Apache service, scheduled tasks (by `artisan schedule:run`), queue work proc
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:apache
+
+# for podman
+▶ podman run -d \
+--restart always \
+--hostname simple \
+--name simple
+-p 80:80 \
+-e UID=$(id -u) \
+-e GID=$(id -g) \
+--uidmap 0:0:999 --gidmap 0:0:999 \
+--uidmap 1000:$(id -u):1 --gidmap 1000:$(id -g):1 \
+-e SCHEDULE=On \
+-e SUPERVISORD=On \
+-v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
+-v /path/to/host:/var/www/html \
+quay.io/troytse/php-laravel:apache
 ```
 
 ### A typical example for `apache`:
@@ -62,11 +78,11 @@ This image was built based-on [php/fpm-alpine](https://hub.docker.com/_/php?tab=
 The PHP-FPM processes, scheduled tasks (by `artisan schedule:run`), queue work processes (by `artisan queue:work`), and any commands by artisan will run as a user with `$UID` and `$GID`.
 
 ```shell
-▶ docker run \
+# for docker
+▶ docker run -d \
 --restart always \
 --hostname sample \
---name sample
--d \
+--name sample \
 -p 9000:9000 \
 -e UID=$(id -u) \
 -e GID=$(id -g) \
@@ -75,6 +91,22 @@ The PHP-FPM processes, scheduled tasks (by `artisan schedule:run`), queue work p
 -v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
 -v /path/to/host:/var/www/html \
 troytse/php-laravel:fpm-alpine
+
+# for podman
+▶ podman run -d \
+--restart always \
+--hostname sample \
+--name sample \
+-p 9000:9000 \
+-e UID=$(id -u) \
+-e GID=$(id -g) \
+--uidmap 0:0:999 --gidmap 0:0:999 \
+--uidmap 1000:$(id -u):1 --gidmap 1000:$(id -g):1 \
+-e SCHEDULE=On \
+-e SUPERVISORD=On \
+-v /path/to/your/php.ini:/usr/local/etc/php/php.ini \
+-v /path/to/host:/var/www/html \
+quay.io/troytse/php-laravel:fpm-alpine
 ```
 
 ### A typical example for `fpm-alpine`:
@@ -146,27 +178,33 @@ PID   USER     TIME  COMMAND
 - Run artisan command in the container.
 
     ```shell
-    ▶ docker exec -it <container_name> artisan <command>
+    ▶ docker/podman exec -it <container_name> artisan <command>
     ```
 
 - Run composer command in the container.
 
     ```shell
-    ▶ docker exec -it <container_name> composer <command>
+    ▶ docker/podman exec -it <container_name> composer <command>
     ```
 
 - You can create a shell script in your project directory to quickly call them.
 
-    - For example, create a shell named **"docker_exec"** and content as follows:
+    - For example, create a shell named **"container_exec"** and content as follows:
+    - docker:
     ```shell
     #!/bin/sh
     sudo docker exec -it your_container_name $@ 
     ```
+    - podman:
+    ```shell
+    #!/bin/sh
+    podman exec -it your_container_name $@ 
+    ```
 
     - Then you can call them like this:
     ```shell
-    ▶ ./docker_exec artisan make:job DoSomething
-    ▶ ./docker_exec composer dump-autoload
+    ▶ ./container_exec artisan make:job DoSomething
+    ▶ ./container_exec composer dump-autoload
     ```
 
     - **(The above operations will be run as the specified user by `$UID` and `$GID`.)**
