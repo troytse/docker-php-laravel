@@ -139,7 +139,7 @@ PID   USER     TIME  COMMAND
 **(On/Off, Default: Off)**
 - This variable specifies whether to run the supervisor service after the container is created.
 
-## SUPER
+## SUPERVISORD
 **(On/Off, Default: Off)**
 - This variable specifies whether to add the "php artisan schedule:run" into the crontab after the container is created.
 
