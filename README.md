@@ -135,13 +135,13 @@ PID   USER     TIME  COMMAND
 - These two variables specify to run as the user for the Apache/PHP-FPM, scheduled task, queue work, and artisan command.
 - **(for apache, `$UID` and `$GID` will override the `$APACHE_RUN_USER` and `$APACHE_RUN_GROUP`)**
 
-## SUPERVISORD
+## SCHEDULE
 **(On/Off, Default: Off)**
-- This variable specifies whether to run the supervisor service after the container is created.
+- This variable specifies whether to add the "php artisan schedule:run" into the crontab after the container is created.
 
 ## SUPERVISORD
 **(On/Off, Default: Off)**
-- This variable specifies whether to add the "php artisan schedule:run" into the crontab after the container is created.
+- This variable specifies whether to run the supervisor service after the container is created.
 
 ## Supervisor configuration
 **(Optional)**
